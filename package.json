@@ -1,7 +1,14 @@
 {
 	"name": "@imaginelearning/test-storybook-a11y",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Automatically run Jest accessibility tests on Storybook stories",
+	"keywords": [
+		"jest",
+		"jest-axe",
+		"storybook",
+		"accessibility",
+		"a11y"
+	],
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"repository": "https://github.com/ImagineLearning/test-storybook-a11y.git",

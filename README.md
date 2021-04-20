@@ -36,7 +36,7 @@ It will automatically render each story from all matching story files, and test 
 
 import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
 
-testStorybookA11y('./**/stories.@(jsx|tsx)');
+testStorybookA11y('./**/*.stories.@(jsx|tsx)');
 ```
 
 ### Jest setup
