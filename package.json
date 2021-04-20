@@ -1,0 +1,55 @@
+{
+	"name": "@imaginelearning/test-storybook-a11y",
+	"version": "0.1.0",
+	"description": "Automatically run Jest accessibility tests on Storybook stories",
+	"main": "index.js",
+	"typings": "index.d.ts",
+	"repository": "https://github.com/ImagineLearning/test-storybook-a11y.git",
+	"author": "Imagine Learning",
+	"license": "MIT",
+	"private": false,
+	"scripts": {
+		"test": "jest"
+	},
+	"devDependencies": {
+		"@imaginelearning/eslint-config": "^0.1.1",
+		"@imaginelearning/prettier-config": "^0.1.1",
+		"@storybook/react": "^6.2.8",
+		"@testing-library/react": "^11.2.6",
+		"@typescript-eslint/eslint-plugin": "^4.22.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"babel-eslint": "^10.1.0",
+		"eslint": "^7.24.0",
+		"eslint-config-airbnb": "^18.2.1",
+		"eslint-config-prettier": "^8.2.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-prettier": "^3.4.0",
+		"husky": "^4.3.8",
+		"jest": "^26.6.3",
+		"jest-axe": "^4.1.0",
+		"lint-staged": "^10.5.4",
+		"prettier": "^2.2.1",
+		"pretty-quick": "^3.1.0",
+		"react": "^17.0.2"
+	},
+	"peerDependencies": {
+		"@storybook/react": ">=6",
+		"@testing-library/react": ">=11",
+		"jest": ">=26",
+		"jest-axe": ">=4",
+		"react": ">=16"
+	},
+	"dependencies": {
+		"glob": "^7.1.6"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged -p false",
+			"pre-push": "yarn test"
+		}
+	},
+	"lint-staged": {
+		"*.(js|jsx|json|ts)": "pretty-quick --staged",
+		"*.(js|jsx|ts)": "eslint"
+	}
+}

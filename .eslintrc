@@ -1,0 +1,4 @@
+{
+	"extends": ["@imaginelearning/eslint-config/base"],
+	"rules": {}
+}
