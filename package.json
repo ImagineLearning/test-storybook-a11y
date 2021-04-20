@@ -8,6 +8,9 @@
 	"author": "Imagine Learning",
 	"license": "MIT",
 	"private": false,
+	"engines": {
+		"node": ">=12.15"
+	},
 	"scripts": {
 		"test": "jest"
 	},
