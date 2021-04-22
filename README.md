@@ -24,6 +24,7 @@ It also requires the following peer dependencies:
 - [jest-axe](https://github.com/nickcolley/jest-axe)
 - [react](https://github.com/facebook/react/)
 - [@storybook/react](https://github.com/storybookjs/storybook/tree/master/app/react)
+- [@testing-library/jest-dom](https://github.com/testing-library/jest-dom)
 - [@testing-library/react](https://github.com/testing-library/react-testing-library)
 
 ## Usage
@@ -39,17 +40,8 @@ import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
 testStorybookA11y('./**/*.stories.@(jsx|tsx)');
 ```
 
-### Jest setup
-
-Because this package uses jest-axe's custom Jest matcher, be sure you've configured it in your project.
-If you used Create React App to bootstrap your application, simply add this to your `setupTest.ts` file:
-
-```ts
-import 'jest-axe/extend-expect';
-```
-
 ## Disclaimer
 
 Using this package does not ensure comprehensive accessibility testing in your project.
 It is a quick and simple way to add some level of automated accessibility testing by leveraging your existing Storybook stories.
-Keep in mind that by default Jest uses [jsdom](https://github.com/jsdom/jsdom) to render your components, so while it _can_ help to identify structural issues, it's not likely to identify issues caused by styles--such as improper color contrast.
+Keep in mind that by default Jest uses [jsdom](https://github.com/jsdom/jsdom) to render your components, so while it _can_ help to identify structural issues, unless you're rendering styles in your unit tests it's not likely to identify style issues--such as improper color contrast.

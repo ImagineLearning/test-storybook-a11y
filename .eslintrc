@@ -1,4 +1,6 @@
 {
 	"extends": ["@imaginelearning/eslint-config/base"],
-	"rules": {}
+	"rules": {
+		"@typescript-eslint/no-var-requires": "off"
+	}
 }

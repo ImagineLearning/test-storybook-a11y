@@ -1,10 +1,11 @@
 // @ts-check
-
+/* global expect, describe, test */
 /** @typedef {import('@storybook/react').Story} Story */
 
+const { toBeEmptyDOMElement } = require('@testing-library/jest-dom/matchers');
 const { render, waitFor } = require('@testing-library/react');
 const glob = require('glob');
-const { axe } = require('jest-axe');
+const { axe, toHaveNoViolations } = require('jest-axe');
 const { createElement } = require('react');
 const { getStoryTestCases } = require('./utils');
 
@@ -16,11 +17,17 @@ module.exports = testStorybookA11y;
  * @returns {void}
  */
 function testStorybookA11y(storyGlob) {
+	// Get stories to test
 	const search = storyGlob || '**/*.stories.@(js|jsx|ts|tsx)';
 	const files = glob.sync(search, { absolute: true, ignore: ['**/node_modules/**/*'] });
 	const cases = getStoryTestCases(files);
 
+	// Configure Jest custom matchers
+	expect.extend({ toBeEmptyDOMElement, ...toHaveNoViolations });
+
+	// Run tests
 	describe.each(cases)('%s a11y', (_, module) => {
+		// eslint-disable-next-line
 		const storyModule = require(module);
 
 		/** @type {[string, Story, any][]} */
