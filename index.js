@@ -37,13 +37,18 @@ function testStorybookA11y(storyGlob) {
 
 		test.each(stories)('%s story should have no a11y violations', async (__, story, props) => {
 			const { container } = render(createElement(story, props));
+
+			// Wait for story to render completely
 			await waitFor(
-				async () => {
-					const results = await axe(container);
-					expect(results).toHaveNoViolations();
+				() => {
+					expect(container).not.toBeEmptyDOMElement();
 				},
 				{ timeout: 5000 }
 			);
+
+			// Test for a11y violations
+			const results = await axe(container);
+			expect(results).toHaveNoViolations();
 		});
 	});
 }
