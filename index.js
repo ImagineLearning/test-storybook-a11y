@@ -1,6 +1,7 @@
 // @ts-check
 /* global expect, describe, test */
 /** @typedef {import('@storybook/react').Story} Story */
+/** @typedef {import('./index').TestOptions} TestOptions */
 
 const { toBeEmptyDOMElement } = require('@testing-library/jest-dom/matchers');
 const { render, waitFor } = require('@testing-library/react');
@@ -14,9 +15,12 @@ module.exports = testStorybookA11y;
 /**
  *
  * @param {string} [storyGlob]
+ * @param {TestOptions} [options]
  * @returns {void}
  */
-function testStorybookA11y(storyGlob) {
+function testStorybookA11y(storyGlob, options) {
+	const { timeout, axeOptions } = options || { timeout: 1000 };
+
 	// Get stories to test
 	const search = storyGlob || '**/*.stories.@(js|jsx|ts|tsx)';
 	const files = glob.sync(search, { absolute: true, ignore: ['**/node_modules/**/*'] });
@@ -43,11 +47,11 @@ function testStorybookA11y(storyGlob) {
 				() => {
 					expect(container).not.toBeEmptyDOMElement();
 				},
-				{ timeout: 5000 }
+				{ timeout }
 			);
 
 			// Test for a11y violations
-			const results = await axe(container);
+			const results = await axe(container, axeOptions);
 			expect(results).toHaveNoViolations();
 		});
 	});
