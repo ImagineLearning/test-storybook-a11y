@@ -1,6 +1,6 @@
 {
 	"name": "@imaginelearning/test-storybook-a11y",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Automatically run Jest accessibility tests on Storybook stories",
 	"keywords": [
 		"jest",
