@@ -1,7 +1,9 @@
 // @ts-check
 /* global expect, describe, test */
+/** @typedef {import('react').FunctionComponentElement<any>} FunctionComponentElement */
 /** @typedef {import('@storybook/react').Story} Story */
 /** @typedef {import('./index').TestOptions} TestOptions */
+/** @typedef {((story: (() => FunctionComponentElement)) => FunctionComponentElement)} StoryDecorator */
 
 const { toBeEmptyDOMElement } = require('@testing-library/jest-dom/matchers');
 const { render, waitFor } = require('@testing-library/react');
@@ -34,13 +36,17 @@ function testStorybookA11y(storyGlob, options) {
 		// eslint-disable-next-line
 		const storyModule = require(module);
 
+		// Get story decorators, if any
+		/** @type {{decorators: StoryDecorator[]}} */
+		const { decorators } = storyModule.default || {};
+
 		/** @type {[string, Story, any][]} */
 		const stories = Object.keys(storyModule)
 			.filter((key) => key !== 'default')
 			.map((key) => [key, storyModule[key], storyModule[key].args]);
 
 		test.each(stories)('%s story should have no a11y violations', async (__, story, props) => {
-			const { container } = render(createElement(story, props));
+			const { container } = renderWithDecorators(story, props, decorators);
 
 			// Wait for story to render completely
 			await waitFor(
@@ -55,4 +61,18 @@ function testStorybookA11y(storyGlob, options) {
 			expect(results).toHaveNoViolations();
 		});
 	});
+}
+
+/**
+ *
+ * @param {Story} story
+ * @param {any} props
+ * @param {StoryDecorator[]} [decorators]
+ */
+function renderWithDecorators(story, props, decorators) {
+	const decorated = (decorators || []).reverse().reduce(
+		(elem, decorator) => () => decorator(elem),
+		() => createElement(story, props)
+	);
+	return render(decorated());
 }
