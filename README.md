@@ -40,6 +40,75 @@ import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
 testStorybookA11y('./**/*.stories.@(jsx|tsx)');
 ```
 
+### Additional parameters
+
+#### `GlobalStoryConfig`
+
+If your Storybook uses global decorators, you can provide a second parameter which a `GlobalStoryConfig` object:
+
+```ts
+interface GlobalStoryConfig {
+	decorators: StoryDecorator[];
+	globals: Args;
+}
+```
+
+The `decorators` property would typically be set with the decorators exported from your `preview.js` file.
+
+```ts
+// src/a11y.test.ts
+
+import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
+import { decorators } from '../.storybook/preview';
+
+testStorybookA11y('./**/*.stories.@(jsx|tsx)', { decorators });
+```
+
+If your decorators make use of [`globalTypes`](https://storybook.js.org/docs/react/essentials/toolbars-and-globals#global-types-and-the-toolbar-annotation)
+those values can be included as well.
+
+```ts
+// src/a11y.test.ts
+
+import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
+import { decorators } from '../.storybook/preview';
+
+testStorybookA11y('./**/*.stories.@(jsx|tsx)', {
+	decorators,
+	globals: { language: 'en' },
+});
+```
+
+#### `TestOptions`
+
+For more control over the test execution itself, you can provide an optional third parameter, which is a `TestOptions` object:
+
+```ts
+interface TestOptions {
+	timeout?: number;
+	axeOptions?: axe.RunOptions;
+}
+```
+
+The `timeout` property determines how long the test will wait for rendering to settle,
+using [DOM Testing Library's `waitFor` function](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor).
+The default value is 1000 milliseconds.
+
+The `axeOptions` property is [`options` parameter](https://github.com/dequelabs/axe-core/blob/master/doc/API.md#options-parameter) passed directly to `axe-core`.
+
+```ts
+// src/a11y.test.ts
+
+import testStorybookA11y from '@imaginelearning/test-storybook-a11y';
+
+testStorybookA11y('./**/*.stories.@(jsx|tsx)', undefined, {
+	timeout: 5000,
+	axeOptions: {
+		runOnly: ['wcag2a', 'wcag2aa'],
+	},
+});
+```
+
 ## Disclaimer
 
 Using this package does not ensure comprehensive accessibility testing in your project.

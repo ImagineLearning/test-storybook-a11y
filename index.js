@@ -1,9 +1,12 @@
 // @ts-check
 /* global expect, describe, test */
 /** @typedef {import('react').FunctionComponentElement<any>} FunctionComponentElement */
+/** @typedef {import('@storybook/react').Args} Args */
 /** @typedef {import('@storybook/react').Story} Story */
+/** @typedef {import('@storybook/react').StoryContext} StoryContext */
 /** @typedef {import('./index').TestOptions} TestOptions */
-/** @typedef {((story: (() => FunctionComponentElement)) => FunctionComponentElement)} StoryDecorator */
+/** @typedef {((story: Story, context?: Partial<StoryContext>) => FunctionComponentElement)} StoryDecorator */
+/** @typedef {{ decorators: StoryDecorator[], globals: Args }} GlobalStoryConfig */
 
 const { toBeEmptyDOMElement } = require('@testing-library/jest-dom/matchers');
 const { render, waitFor } = require('@testing-library/react');
@@ -17,10 +20,11 @@ module.exports = testStorybookA11y;
 /**
  *
  * @param {string} [storyGlob]
+ * @param {GlobalStoryConfig} [globalConfig]
  * @param {TestOptions} [options]
  * @returns {void}
  */
-function testStorybookA11y(storyGlob, options) {
+function testStorybookA11y(storyGlob, globalConfig, options) {
 	const { timeout, axeOptions } = options || { timeout: 1000 };
 
 	// Get stories to test
@@ -38,7 +42,9 @@ function testStorybookA11y(storyGlob, options) {
 
 		// Get story decorators, if any
 		/** @type {{decorators: StoryDecorator[]}} */
-		const { decorators } = storyModule.default || {};
+		const { decorators: storyDecorators = [] } = storyModule.default || {};
+		const decorators = [...((globalConfig && globalConfig.decorators) || []), ...storyDecorators];
+		const { globals } = globalConfig || {};
 
 		/** @type {[string, Story, any][]} */
 		const stories = Object.keys(storyModule)
@@ -46,7 +52,7 @@ function testStorybookA11y(storyGlob, options) {
 			.map((key) => [key, storyModule[key], storyModule[key].args]);
 
 		test.each(stories)('%s story should have no a11y violations', async (__, story, props) => {
-			const { container } = renderWithDecorators(story, props, decorators);
+			const { container } = renderWithDecorators(story, props, decorators, globals);
 
 			// Wait for story to render completely
 			await waitFor(
@@ -68,10 +74,11 @@ function testStorybookA11y(storyGlob, options) {
  * @param {Story} story
  * @param {any} props
  * @param {StoryDecorator[]} [decorators]
+ * @param {Args} [globals]
  */
-function renderWithDecorators(story, props, decorators) {
+function renderWithDecorators(story, props, decorators, globals = {}) {
 	const decorated = (decorators || []).reverse().reduce(
-		(elem, decorator) => () => decorator(elem),
+		(elem, decorator) => () => decorator(elem, { globals }),
 		() => createElement(story, props)
 	);
 	return render(decorated());
