@@ -47,9 +47,9 @@ function testStorybookA11y(storyGlob, globalConfig, options) {
 		const { globals } = globalConfig || {};
 
 		/** @type {[string, Story, any][]} */
-		const stories = Object.keys(storyModule)
-			.filter((key) => key !== 'default')
-			.map((key) => [key, storyModule[key], storyModule[key].args]);
+		const stories = Object.entries(storyModule)
+			.filter(([key]) => key !== 'default' && key !== '__esModule')
+			.map(([key, value]) => [key, value, value.args]);
 
 		test.each(stories)('%s story should have no a11y violations', async (__, story, props) => {
 			const { container } = renderWithDecorators(story, props, decorators, globals);
