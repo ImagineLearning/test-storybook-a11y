@@ -1,0 +1,3 @@
+build:
+    image: npm-node16
+    sonar_scan: true
