@@ -19,7 +19,8 @@
 		"node": ">=12.15"
 	},
 	"scripts": {
-		"test": "jest"
+		"test": "jest",
+		"build": "jest"
 	},
 	"devDependencies": {
 		"@imaginelearning/eslint-config": "^0.1.1",
